@@ -22,6 +22,17 @@ class UserRepository{
             console.log("something wrong at repository")
         }
     }
+
+    async getById(userId){
+        try {
+            const user = await User.create(userId,{
+                attributes:['email', 'id']
+            });
+            return user;
+        } catch (error) {
+            console.log("something wrong at repository")
+        }
+    }
 }
 
 module.exports= UserRepository;
