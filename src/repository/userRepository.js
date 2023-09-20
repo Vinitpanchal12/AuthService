@@ -1,4 +1,4 @@
-const {User} = require('../models/index');
+const {User,Role} = require('../models/index');
 
 class UserRepository{
     async create(data){
@@ -6,7 +6,8 @@ class UserRepository{
             const user = await User.create(data);
             return user;
         } catch (error) {
-            console.log("something wrong at repository")
+            console.log("something wrong at repository");
+            throw error;
         }
     }
 
@@ -19,7 +20,8 @@ class UserRepository{
             });
             return true;
         } catch (error) {
-            console.log("something wrong at repository")
+            console.log("something wrong at repository");
+            throw error;
         }
     }
 
@@ -30,7 +32,8 @@ class UserRepository{
             });
             return user;
         } catch (error) {
-            console.log("something wrong at repository")
+            console.log("something wrong at repository");
+            throw error;
         }
     }
 
@@ -43,7 +46,22 @@ class UserRepository{
             });
             return user;
         } catch (error) {
-            console.log("something wrong at repository")
+            console.log("something wrong at repository");
+            throw error;
+        }
+    }
+    async isAdmin(userId){
+        try {
+            const user = await User.findByPk(userId);
+            const adminRole = await Role.findOne({
+                where:{
+                    name:'ADMIN'
+                }
+            });
+            return user.hasRole(adminRole);
+        } catch (error) {
+            console.log("something wrong at repository");
+            throw error;
         }
     }
 }
