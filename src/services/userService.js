@@ -14,6 +14,10 @@ class UserService{
             const user = await this.userRepository.create(data);
             return user;
         } catch (error) {
+            console.log(error);
+            if(error.name == 'SequelizeValidationError'){
+                throw error;
+            }
             console.log("something wrong at service");
         }
     }
@@ -34,6 +38,9 @@ class UserService{
             });
             return newJwt;
         } catch (error) {
+            if(error.name =='AttributeNotFound'){
+                throw error;
+            }
             console.log("something wrong at sign in service");
             throw error;
         }

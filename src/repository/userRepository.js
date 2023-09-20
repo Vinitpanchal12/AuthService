@@ -1,4 +1,7 @@
 const {User,Role} = require('../models/index');
+const ClientError = require('../utils/clientError');
+const ValidationError = require('../utils/validationError');
+const {StatusCodes}= require('http-status-codes');
 
 class UserRepository{
     async create(data){
@@ -6,6 +9,9 @@ class UserRepository{
             const user = await User.create(data);
             return user;
         } catch (error) {
+            if(error.name == 'SequelizeValidationError'){
+                throw new ValidationError(error);
+            }
             console.log("something wrong at repository");
             throw error;
         }
@@ -44,6 +50,14 @@ class UserRepository{
                     email: userEmail
                 }
             });
+            if(!user){
+                throw new ClientError(
+                    'AttributeNotFound',
+                    'Invalid email sent in the request',
+                    'please check the email, there is no record of email ',
+                    StatusCodes.NOT_FOUND
+                );
+            }
             return user;
         } catch (error) {
             console.log("something wrong at repository");
